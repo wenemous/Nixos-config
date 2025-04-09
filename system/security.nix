@@ -1,11 +1,11 @@
 { pkgs, lib, ... }: {
-  security.sudo = {
-    enable = true;
-    execWheelOnly = true;
-    wheelNeedsPassword = false;
-  };
 
-  security.polkit = {
-    enable = true;
+  security = {
+    polkit.enable = true;
+    sudo = {
+      enable = true;
+      execWheelOnly = true; 
+      wheelNeedsPassword = false;
+    };
   };
 }

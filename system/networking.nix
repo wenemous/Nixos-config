@@ -5,8 +5,7 @@
     networkmanager.enable = true;
 
     useDHCP = lib.mkForce true;
-    dhcpcd.enable = true;
-
+  
     firewall.checkReversePath = false;
 
     hosts = {

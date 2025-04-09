@@ -30,122 +30,9 @@
     };
   };
 
-  # Graphics
-  services = {
-    xserver.videoDrivers = [ "nvidia" ];
-    switcherooControl.enable = true;
-  };
-  hardware = {
-    cpu.intel.updateMicrocode = true;
-    nvidia-container-toolkit.enable = true;
-    graphics = {
-      enable = true;
-      extraPackages = with pkgs; [
-        intel-media-driver
-        intel-ocl
-        intel-vaapi-driver
-        nvidia-vaapi-driver
-      ];
-    };
-    nvidia = {
-      modesetting.enable = true;
-      powerManagement = {
-        enable = true;
-        finegrained = true;
-      };
-      dynamicBoost.enable = true;
-      open = false;
-      nvidiaSettings = true;
-      package = config.boot.kernelPackages.nvidiaPackages.stable;
-      prime = {
-        offload = {
-          enable = true;
-          enableOffloadCmd = true;
-        };
-        intelBusId = "PCI:0:2:0"; 
-        nvidiaBusId = "PCI:1:0:0";
-      };
-    };
-  }; 
-
-  # Network
-  networking = {
-    hostName = "NixOS";
-    networkmanager.enable = true;
-  };
-
   # Time zone.
   time.timeZone = "Europe/Moscow";
-
-  # Locales and Fonts
-  i18n = {
-    defaultLocale = "en_US.UTF-8";
-    supportedLocales = [ "all" ];
-  };
-    
-  console = {
-    font = "Lat2-Terminus16";
-    keyMap = "us";
-    # useXkbConfig = true;
-  };
-
-  fonts.packages = with pkgs; [
-    noto-fonts
-    font-awesome
-    liberation_ttf
-    noto-fonts-cjk-sans
-    noto-fonts-cjk-serif
-    noto-fonts-color-emoji
-    inter
-  ];
-
-  # GNOME
-  services.xserver = {
-    enable = true;
-    displayManager.gdm = {
-      enable = true;
-      wayland = true;
-    };
-    desktopManager.gnome = {
-      enable = true;
-      extraGSettingsOverridePackages = [ pkgs.mutter ];
-      extraGSettingsOverrides = ''
-        [org.gnome.mutter]
-        experimental-features=['scale-monitor-framebuffer', 'variable-refresh-rate', 'xwayland-native-scaling']
-      '';
-    };
-  };
-  
-  nixpkgs.overlays = [
-    (final: prev: {
-      mutter = prev.mutter.overrideAttrs (oldAttrs: {
-        # GNOME dynamic triple buffering (huge performance improvement)
-        # See https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1441
-        src = final.fetchFromGitLab {
-          domain = "gitlab.gnome.org";
-          owner = "vanvugt";
-          repo = "mutter";
-          rev = "triple-buffering-v4-47";
-          hash = "sha256-6n5HSbocU8QDwuhBvhRuvkUE4NflUiUKE0QQ5DJEzwI=";
-        };
-
-        preConfigure =
-          let
-            gvdb = final.fetchFromGitLab {
-              domain = "gitlab.gnome.org";
-              owner = "GNOME";
-              repo = "gvdb";
-              rev = "2b42fc75f09dbe1cd1057580b5782b08f2dcb400";
-              hash = "sha256-CIdEwRbtxWCwgTb5HYHrixXi+G+qeE1APRaUeka3NWk=";
-            };
-          in
-          ''
-            cp -a "${gvdb}" ./subprojects/gvdb
-          '';
-       });
-    })
-  ];
-  
+ 
   # Flatpak
   services.flatpak.enable = true;
 
@@ -178,11 +65,7 @@
     };
   };
 
-  # Security
-  security = {
-    polkit.enable = true;
-    sudo.wheelNeedsPassword = false;
-  };
+
   
   programs = {
     mtr.enable = true;
