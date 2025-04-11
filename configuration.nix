@@ -155,6 +155,7 @@
     noto-fonts-cjk-serif
     noto-fonts-color-emoji
     inter
+    adwaita-fonts
   ];
 
 
@@ -369,16 +370,13 @@
   environment = {
     sessionVariables.NIXOS_OZONE_WL = "1";
     systemPackages = with pkgs; [
-     # (google-chrome.override {
-     #   commandLineArgs = [
-          #"--enable-features=TouchpadOverscrollHistoryNavigation"
-          #"--enable-features=AcceleratedVideoEncoder,VaapiOnNvidiaGPUs,VaapiIgnoreDriverChecks,Vulkan,DefaultANGLEVulkan,VulkanFromANGLE"
-          #"--enable-features=VaapiIgnoreDriverChecks,VaapiVideoDecoder,PlatformHEVCDecoderSupport"
-          #"--enable-features=UseMultiPlaneFormatForHardwareVideo"
-          #"--ignore-gpu-blocklist"
-          #"--enable-zero-copy"
-     #   ];
-     # })
+      (google-chrome.override {
+        commandLineArgs = [
+          "--enable-features=TouchpadOverscrollHistoryNavigation"
+          "--ignore-gpu-blocklist"
+          "--enable-zero-copy"
+        ];
+      })
 
 
     # # # # # #
