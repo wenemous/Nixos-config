@@ -5,7 +5,9 @@
       ./hardware-configuration.nix
     ];
 
-  # Bootloader
+  ##############
+  # Bootloader #
+  ##############
   boot = {
     kernelPackages = pkgs.linuxPackages_zen;
     consoleLogLevel = 3;
@@ -29,6 +31,51 @@
       theme = "bgrt";
     };
   };
+
+  ############
+  # Graphics #
+  ############
+  services = {
+    xserver.videoDrivers = [ "nvidia" ];
+    switcherooControl.enable = true;
+  };
+         
+  hardware = {
+    cpu.intel.updateMicrocode = true;
+    nvidia-container-toolkit.enable = true;
+    graphics = {
+      enable = true;
+      extraPackages = with pkgs; [
+        nvidia-vaapi-driver
+        intel-media-driver
+        intel-ocl
+        intel-vaapi-driver
+      ];
+    };
+
+    nvidia = {
+      modesetting.enable = true;
+      dynamicBoost.enable = true;
+      open = false;
+      nvidiaSettings = true;
+      package = config.boot.kernelPackages.nvidiaPackages.stable;
+      powerManagement = {
+        enable = true;
+        finegrained = true;
+      };
+      prime = {
+        offload = {
+          enable = true;
+          enableOffloadCmd = true;
+        };
+        intelBusId = "PCI:0:2:0"; 
+        nvidiaBusId = "PCI:1:0:0";
+      };
+    };
+  };  
+
+
+
 
   # Time zone.
   time.timeZone = "Europe/Moscow";
